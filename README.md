@@ -17,6 +17,7 @@ The project is maintained by a non-profit organisation called the **Ghost Founda
 
 **NOTE: If you’re stuck, can’t get something working or need some help, please head on over and join our [Slack community](https://ghost.org/slack/) rather than opening an issue.**
 
+# NOTE: This is the Zumobi fork of Ghost.
 
 # Quick Start Install
 
