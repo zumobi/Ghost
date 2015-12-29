@@ -9,10 +9,11 @@ var config          = require('../config'),
     url;
 
 url = function (options) {
-    var absolute = options && options.hash.absolute;
+    var absolute = options && options.hash.absolute,
+        section = !!options ? options.hash.section : '';
 
     if (schema.isPost(this)) {
-        return config.urlFor('post', {post: this}, absolute);
+        return config.urlFor('post', {post: this, section: section}, absolute);
     }
 
     if (schema.isTag(this)) {
