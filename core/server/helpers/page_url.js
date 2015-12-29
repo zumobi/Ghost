@@ -20,7 +20,7 @@ page_url = function (context, block) {
     var url = config.paths.subdir;
 
     if (this.tagSlug !== undefined) {
-        url += '/' + config.routeKeywords.tag + '/' + this.tagSlug;
+        url += '/' + this.tagSlug;
     }
 
     if (this.authorSlug !== undefined) {
