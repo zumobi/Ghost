@@ -33,13 +33,17 @@ _.extend(PageMapGenerator.prototype, {
             var homePage = {
                     id: 0,
                     name: 'home'
+                },
+                newsroomPage = {
+                     id: -1,
+                    name: 'newsroom'
                 };
-            return [homePage].concat(resp.posts);
+            return [newsroomPage, homePage].concat(resp.posts);
         });
     },
 
     getUrlForDatum: function (post) {
-        if (post.id === 0 && !_.isEmpty(post.name)) {
+        if (post.id <= 0 && !_.isEmpty(post.name)) {
             return config.urlFor(post.name, true);
         }
 

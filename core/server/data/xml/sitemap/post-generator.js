@@ -27,6 +27,7 @@ _.extend(PostMapGenerator.prototype, {
                 internal: true
             },
             status: 'published',
+            tag: 'newsroom',
             staticPages: false,
             limit: 'all'
         }).then(function (resp) {
@@ -35,7 +36,7 @@ _.extend(PostMapGenerator.prototype, {
     },
 
     getUrlForDatum: function (post) {
-        return config.urlFor('post', {post: post}, true);
+        return config.urlFor('post', {post: post, section: 'newsroom'}, true);
     },
 
     getPriorityForDatum: function (post) {

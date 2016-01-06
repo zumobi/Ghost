@@ -155,6 +155,7 @@ function urlFor(context, data, absolute) {
     // this will become really big
     knownPaths = {
         home: '/',
+        newsroom: '/newsroom/',
         rss: '/rss/',
         api: apiPath,
         sitemap_xsl: '/sitemap.xsl'
