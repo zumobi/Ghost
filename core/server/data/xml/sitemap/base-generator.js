@@ -13,7 +13,8 @@ var _         = require('lodash'),
 XMLNS_DECLS = {
     _attr: {
         xmlns: 'http://www.sitemaps.org/schemas/sitemap/0.9',
-        'xmlns:image': 'http://www.google.com/schemas/sitemap-image/1.1'
+        'xmlns:image': 'http://www.google.com/schemas/sitemap-image/1.1',
+        'xmlns:xhtml': 'http://www.w3.org/1999/xhtml'
     }
 };
 
@@ -28,6 +29,9 @@ function BaseSiteMapGenerator() {
 _.extend(BaseSiteMapGenerator.prototype, {
     init: function () {
         var self = this;
+
+        setInterval(self.refreshAll.bind(self), 1000 * 60 * 10);  // rebuild sitemap every ten minutes
+
         return this.refreshAll().then(function () {
             return self.bindEvents();
         });
@@ -55,8 +59,8 @@ _.extend(BaseSiteMapGenerator.prototype, {
         // Create all the url elements in JSON
         var self = this,
             nodes;
-        nodes = _.map(data, function (datum) {
-            var node = self.createUrlNodeFromDatum(datum);
+        nodes = _.map(data, function (datum, index) {
+            var node = self.createUrlNodeFromDatum(datum, index);
             self.updateLastModified(datum);
             self.updateLookups(datum, node);
 
@@ -219,6 +223,10 @@ _.extend(BaseSiteMapGenerator.prototype, {
 
         lookup = this.nodeTimeLookup;
         delete lookup[datum.id];
+    },
+
+    slugifyForZbi: function (title) {
+      return title.replace(/[^\da-z]/gi, ' ').trim().replace(/\s+/g, '-').toLowerCase();
     }
 });
 
