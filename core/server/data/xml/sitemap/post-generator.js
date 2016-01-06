@@ -49,10 +49,11 @@ _.extend(PostMapGenerator.prototype, {
         return post.featured ? 0.9 : 0.8;
     },
 
-    createUrlNodeFromDatum: function (datum) {
+    createUrlNodeFromDatum: function (datum, index) {
         var orig = BaseMapGenerator.prototype.createUrlNodeFromDatum.apply(this, arguments),
             imageUrl,
-            imageEl;
+            imageEl,
+            linkAttrAndroid;
 
         // Check for image and add it
         if (datum.image) {
@@ -64,10 +65,25 @@ _.extend(PostMapGenerator.prototype, {
                 {'image:caption': path.basename(imageUrl)}
             ];
             // Add the node to the url xml node
-            orig.url.push({
-                'image:image': imageEl
-            });
+//            orig.url.push({
+//                'image:image': imageEl
+//            });
         }
+
+        // Add app indexing nodes
+        // !!!! for the moment, we are only adding indexing to the last ten articles
+        if (index < 10) {
+          linkAttrAndroid = {
+            'rel': 'alternate',
+            'href': 'android-app://com.zumobi.snowreport/skisnow/zumobi/about/newsroom/' + this.slugifyForZbi(datum.title) + '.html'
+          };
+          orig.url.push({
+            'xhtml:link':  [
+              { '_attr': linkAttrAndroid }
+            ]
+          });
+        }
+
 
         return orig;
     }
