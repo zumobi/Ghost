@@ -59,8 +59,8 @@ _.extend(BaseSiteMapGenerator.prototype, {
         // Create all the url elements in JSON
         var self = this,
             nodes;
-        nodes = _.map(data, function (datum, index) {
-            var node = self.createUrlNodeFromDatum(datum, index);
+        nodes = _.map(data, function (datum) {
+            var node = self.createUrlNodeFromDatum(datum);
             self.updateLastModified(datum);
             self.updateLookups(datum, node);
 
@@ -146,7 +146,8 @@ _.extend(BaseSiteMapGenerator.prototype, {
         var url = this.getUrlForDatum(datum),
             priority = this.getPriorityForDatum(datum),
             node,
-            imgNode;
+            imgNode,
+            linkNode;
 
         node = {
             url: [
@@ -161,6 +162,12 @@ _.extend(BaseSiteMapGenerator.prototype, {
 
         if (imgNode) {
             node.url.push(imgNode);
+        }
+
+        linkNode = this.createAppIndexingNodeFromDatum(datum);
+
+        if (linkNode) {
+            node.url.push(linkNode);
         }
 
         return node;
@@ -194,6 +201,24 @@ _.extend(BaseSiteMapGenerator.prototype, {
         return {
             'image:image': imageEl
         };
+    },
+
+    createAppIndexingNodeFromDatum: function (datum) {
+        var link,
+            linkAttrAndroid;
+
+        linkAttrAndroid = {
+            'rel': 'alternate',
+            'href': 'android-app://com.zumobi.snowreport/skisnow/zumobi/about/newsroom/' + this.slugifyForZbi(datum.title) + '.html'
+        };
+
+        link = {
+            'xhtml:link': [
+                { '_attr': linkAttrAndroid }
+            ]
+        };
+
+        return link;
     },
 
     validateImageUrl: function (imageUrl) {
