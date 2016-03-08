@@ -207,6 +207,14 @@ _.extend(BaseSiteMapGenerator.prototype, {
         var link,
             linkAttrAndroid;
 
+        if (!datum.title) {
+            return;
+        }
+
+        if (!this.showAppIndexingUrls) {
+            return;
+        }
+
         linkAttrAndroid = {
             'rel': 'alternate',
             'href': 'android-app://com.zumobi.snowreport/skisnow/zumobi/about/newsroom/' + this.slugifyForZbi(datum.title) + '.html'

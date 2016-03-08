@@ -5,6 +5,7 @@ var _      = require('lodash'),
 
 // A class responsible for generating a sitemap from posts and keeping it updated
 function PostMapGenerator(opts) {
+    _.extend(opts, { showAppIndexingUrls: true });
     _.extend(this, opts);
 
     BaseMapGenerator.apply(this, arguments);
