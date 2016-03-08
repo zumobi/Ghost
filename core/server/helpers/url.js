@@ -7,9 +7,10 @@
 var getMetaDataUrl = require('../data/meta/url');
 
 function url(options) {
-    var absolute = options && options.hash.absolute;
+    var absolute = options && options.hash.absolute,
+        section = !!options ? options.hash.section : '';
 
-    return getMetaDataUrl(this, absolute);
+    return getMetaDataUrl(this, absolute, section);
 }
 
 module.exports = url;

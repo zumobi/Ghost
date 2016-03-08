@@ -1,9 +1,9 @@
 var schema = require('../schema').checks,
     config = require('../../config');
 
-function getUrl(data, absolute) {
+function getUrl(data, absolute, section) {
     if (schema.isPost(data)) {
-        return config.urlFor('post', {post: data, secure: data.secure}, absolute);
+        return config.urlFor('post', {post: data, secure: data.secure, section: section}, absolute);
     }
 
     if (schema.isTag(data)) {
