@@ -135,7 +135,9 @@ generateFeed = function generateFeed(data) {
     });
 
     data.results.posts.forEach(function forEach(post) {
-        var itemUrl = config.urlFor('post', {post: post, secure: data.secure}, true),
+        var isNewsroom = _.contains(_.pluck(post.tags, 'name'), 'newsroom'),
+            tagSection = isNewsroom ? 'newsroom' : '',
+            itemUrl = config.urlFor('post', {post: post, secure: data.secure, section: tagSection }, true),
             htmlContent = processUrls(post.html, data.siteUrl, itemUrl),
             item = {
                 title: post.title,
