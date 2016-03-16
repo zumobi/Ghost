@@ -1,19 +1,15 @@
 var _      = require('lodash'),
-    path   = require('path'),
     api    = require('../../../api'),
     config = require('../../../config'),
     BaseMapGenerator = require('./base-generator');
 
 // A class responsible for generating a sitemap from posts and keeping it updated
 function PostMapGenerator(opts) {
-    _.extend(this, _.defaults(opts || {}, PostMapGenerator.Defaults));
+    _.extend(opts, { showAppIndexingUrls: true });
+    _.extend(this, opts);
 
     BaseMapGenerator.apply(this, arguments);
 }
-
-PostMapGenerator.Defaults = {
-    // TODO?
-};
 
 // Inherit from the base generator class
 _.extend(PostMapGenerator.prototype, BaseMapGenerator.prototype);
@@ -47,45 +43,6 @@ _.extend(PostMapGenerator.prototype, {
     getPriorityForDatum: function (post) {
         // give a slightly higher priority to featured posts
         return post.featured ? 0.9 : 0.8;
-    },
-
-    createUrlNodeFromDatum: function (datum, index) {
-        var orig = BaseMapGenerator.prototype.createUrlNodeFromDatum.apply(this, arguments),
-            imageUrl,
-            imageEl,
-            linkAttrAndroid;
-
-        // Check for image and add it
-        if (datum.image) {
-            // Grab the image url
-            imageUrl = this.getUrlForImage(datum.image);
-            // Create the weird xml node syntax structure that is expected
-            imageEl = [
-                {'image:loc': imageUrl},
-                {'image:caption': path.basename(imageUrl)}
-            ];
-            // Add the node to the url xml node
-//            orig.url.push({
-//                'image:image': imageEl
-//            });
-        }
-
-        // Add app indexing nodes
-        // !!!! for the moment, we are only adding indexing to the last ten articles
-        if (index < 10) {
-          linkAttrAndroid = {
-            'rel': 'alternate',
-            'href': 'android-app://com.zumobi.snowreport/skisnow/zumobi/about/newsroom/' + this.slugifyForZbi(datum.title) + '.html'
-          };
-          orig.url.push({
-            'xhtml:link':  [
-              { '_attr': linkAttrAndroid }
-            ]
-          });
-        }
-
-
-        return orig;
     }
 });
 

@@ -1,10 +1,11 @@
-var _       = require('lodash'),
-    xml     = require('xml'),
-    moment  = require('moment'),
-    config  = require('../../../config'),
-    events  = require('../../../events'),
-    utils   = require('./utils'),
-    Promise = require('bluebird'),
+var _         = require('lodash'),
+    xml       = require('xml'),
+    moment    = require('moment'),
+    config    = require('../../../config'),
+    events    = require('../../../events'),
+    utils     = require('./utils'),
+    Promise   = require('bluebird'),
+    path      = require('path'),
     CHANGE_FREQ = 'weekly',
     XMLNS_DECLS;
 
@@ -143,9 +144,12 @@ _.extend(BaseSiteMapGenerator.prototype, {
 
     createUrlNodeFromDatum: function (datum) {
         var url = this.getUrlForDatum(datum),
-            priority = this.getPriorityForDatum(datum);
+            priority = this.getPriorityForDatum(datum),
+            node,
+            imgNode,
+            linkNode;
 
-        return {
+        node = {
             url: [
                 {loc: url},
                 {lastmod: moment(this.getLastModifiedForDatum(datum)).toISOString()},
@@ -153,6 +157,80 @@ _.extend(BaseSiteMapGenerator.prototype, {
                 {priority: priority}
             ]
         };
+
+        imgNode = this.createImageNodeFromDatum(datum);
+
+        if (imgNode) {
+            node.url.push(imgNode);
+        }
+
+        linkNode = this.createAppIndexingNodeFromDatum(datum);
+
+        if (linkNode) {
+            node.url.push(linkNode);
+        }
+
+        return node;
+    },
+
+    createImageNodeFromDatum: function (datum) {
+        // Check for cover first because user has cover but the rest only have image
+        var image = datum.cover || datum.image,
+            imageUrl,
+            imageEl;
+
+        if (!image) {
+            return;
+        }
+
+        // Grab the image url
+        imageUrl = this.getUrlForImage(image);
+
+        // Verify the url structure
+        if (!this.validateImageUrl(imageUrl)) {
+            return;
+        }
+
+        // Create the weird xml node syntax structure that is expected
+        imageEl = [
+            {'image:loc': imageUrl},
+            {'image:caption': path.basename(imageUrl)}
+        ];
+
+        // Return the node to be added to the url xml node
+        return {
+            'image:image': imageEl
+        };
+    },
+
+    createAppIndexingNodeFromDatum: function (datum) {
+        var link,
+            linkAttrAndroid;
+
+        if (!datum.title) {
+            return;
+        }
+
+        if (!this.showAppIndexingUrls) {
+            return;
+        }
+
+        linkAttrAndroid = {
+            'rel': 'alternate',
+            'href': 'android-app://com.zumobi.snowreport/skisnow/zumobi/about/newsroom/' + this.slugifyForZbi(datum.title) + '.html'
+        };
+
+        link = {
+            'xhtml:link': [
+                { '_attr': linkAttrAndroid }
+            ]
+        };
+
+        return link;
+    },
+
+    validateImageUrl: function (imageUrl) {
+        return !!imageUrl;
     },
 
     setSiteMapContent: function (content) {
