@@ -57,8 +57,8 @@ _.extend(BaseSiteMapGenerator.prototype, {
         // Create all the url elements in JSON
         var self = this,
             nodes;
-        nodes = _.map(data, function (datum, index) {
-            var node = self.createUrlNodeFromDatum(datum, index);
+        nodes = _.map(data, function (datum) {
+            var node = self.createUrlNodeFromDatum(datum);
             self.updateLastModified(datum);
             self.updateLookups(datum, node);
 
