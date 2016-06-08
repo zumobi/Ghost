@@ -30,8 +30,6 @@ _.extend(BaseSiteMapGenerator.prototype, {
     init: function () {
         var self = this;
 
-        setInterval(self.refreshAll.bind(self), 1000 * 60 * 10);  // rebuild sitemap every ten minutes
-
         return this.refreshAll().then(function () {
             return self.bindEvents();
         });
