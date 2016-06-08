@@ -164,12 +164,6 @@ _.extend(BaseSiteMapGenerator.prototype, {
             node.url.push(imgNode);
         }
 
-        linkNode = this.createAppIndexingNodeFromDatum(datum);
-
-        if (linkNode) {
-            node.url.push(linkNode);
-        }
-
         return node;
     },
 
@@ -203,32 +197,6 @@ _.extend(BaseSiteMapGenerator.prototype, {
         };
     },
 
-    createAppIndexingNodeFromDatum: function (datum) {
-        var link,
-            linkAttrAndroid;
-
-        if (!datum.title) {
-            return;
-        }
-
-        if (!this.showAppIndexingUrls) {
-            return;
-        }
-
-        linkAttrAndroid = {
-            'rel': 'alternate',
-            'href': 'android-app://com.zumobi.snowreport/skisnow/zumobi/about/newsroom/' + this.slugifyForZbi(datum.title) + '.html'
-        };
-
-        link = {
-            'xhtml:link': [
-                { '_attr': linkAttrAndroid }
-            ]
-        };
-
-        return link;
-    },
-
     validateImageUrl: function (imageUrl) {
         return !!imageUrl;
     },
@@ -256,10 +224,6 @@ _.extend(BaseSiteMapGenerator.prototype, {
 
         lookup = this.nodeTimeLookup;
         delete lookup[datum.id];
-    },
-
-    slugifyForZbi: function (title) {
-      return title.replace(/[^\da-z]/gi, ' ').trim().replace(/\s+/g, '-').toLowerCase();
     }
 });
 
