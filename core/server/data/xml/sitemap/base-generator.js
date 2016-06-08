@@ -144,8 +144,7 @@ _.extend(BaseSiteMapGenerator.prototype, {
         var url = this.getUrlForDatum(datum),
             priority = this.getPriorityForDatum(datum),
             node,
-            imgNode,
-            linkNode;
+            imgNode;
 
         node = {
             url: [
